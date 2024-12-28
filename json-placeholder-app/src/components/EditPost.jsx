@@ -6,47 +6,60 @@ import axios from 'axios'
 
 const EditPost = () => {
     const {id} = useParams()
-
-    const fetchSinglePost = async (id) => {
-        try{
-        const response = await axios.get(`https://jsonplaceholder.typicode.com/posts?id=${id}`)
-        return response.data[0]}
-        catch(err){ console.error(err)}
-    }
-    fetchSinglePost(id)
-
-    const [post, setPost] = useState({
+    const [post,setPost] = useState({
         title: '',
         body: '',
         userId: 0
-
-
     })
-    useEffect(() => {
-        if (data) {
-            console.log(data)
-            setPost({id:data.id,
-                title:data.title,
-                body: data.body, 
-                userId: data.userId})
-        } else{
-            setPost({id:0,
-                title: '', 
-                body: '', 
-                userId: 0})
+
+    const fetchSinglePost = async () => {
+        try{
+        const response = await axios.get(`https://jsonplaceholder.typicode.com/posts?id=${id}`)
+        return response.data[0]}
+        catch(err){
+            console.error(err)
+            return null;
         }
-    }, [data])
+    }
 
+    const updatePost = async () => {
+        const data = await fetchSinglePost();
 
-    const editPostAPI = async (post) => {
-        const response = await axios.put(`https://jsonplaceholder.typicode.com/posts/${post.id}`,
-            {title: post.title,
-            body: post.body,
-            userId: post.userId}, 
-            {headers: {'Content-type': 'application/json; charset=UTF-8',}}
-        )
-        console.log(response)
-        return response.data
+        if (data) {
+            setPost({
+                id: data.id,
+                title: data.title,
+                body: data.body,
+                userId: data.userId
+            });
+        } else {
+            console.warn('No data found for post');
+        }
+    };
+    useEffect(() => {
+        updatePost()
+    }, [id])
+
+    const editPostAPI = async (updatedPost) => {
+        try {
+            const response = await axios.put(
+                `https://jsonplaceholder.typicode.com/posts/${updatedPost.id}`,
+                {
+                    title: updatedPost.title,
+                    body: updatedPost.body,
+                    userId: updatedPost.userId
+                },
+                {
+                    headers: { 'Content-type': 'application/json; charset=UTF-8' },
+                }
+            );
+            console.log('Post Updated', response.data),
+            alert('Post Updated Successfully')        
+        } catch (err) {
+            console.error('Error updating post: ', err);
+            alert('Failed to update post')
+
+        }
     }
 
     const handleSubmit = (event) => {

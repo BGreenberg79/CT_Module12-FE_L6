@@ -28,7 +28,7 @@ const PostList = ()=> {
     }
 
     const handleEditButton = (id) =>{
-        navigate(`edit-post/${id}`)
+        navigate(`/edit-post/${id}`)
     }
     useEffect(() =>{
         fetchPosts();

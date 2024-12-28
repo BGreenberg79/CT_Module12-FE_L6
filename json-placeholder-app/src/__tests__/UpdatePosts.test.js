@@ -8,7 +8,8 @@ import EditPost from '../components/EditPost';
 import PostList from '../components/PostList'
 import axios from 'axios';
 import { render, waitFor, screen, fireEvent } from '@testing-library/react';
-import { MemoryRouter, Route, Routes} from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom'; 
+
 
 jest.mock('axios');
 
@@ -30,13 +31,12 @@ describe('EditPost component', ()=>{
         fireEvent.click(screen.getByRole('button', {name: /Edit/i }));
         
         await waitFor(()=> {
-            screen.getByLabelText(/Title:/i)
+            screen.getByLabelText(/Title:/i);
         })
 
         expect(screen.getByLabelText(/Title:/i).value).toBe(mockPost.title);
         expect(screen.getByLabelText(/Body:/i).value).toBe(mockPost.body);
         expect(screen.getByLabelText(/User Id:/i).value).toBe(String(mockPost.userId));
-        
 
         // Tests updated inputs
         fireEvent.change(screen.getByLabelText(/Title:/i), { target: { value: "Update Title" } });
