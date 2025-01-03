@@ -1,13 +1,12 @@
 import { TextEncoder, TextDecoder } from 'text-encoding';
 global.TextEncoder = TextEncoder;
 global.TextDecoder = TextDecoder;
-
-
 import React from 'react';
 import '@testing-library/jest-dom';
 import PostForm from '../components/PostForm';
 import axios from 'axios';
-import { render, waitFor, screen, fireEvent } from '@testing-library/react';
+import { render, waitFor, screen, fireEvent, act } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 
 
 jest.mock('axios');
@@ -40,7 +39,11 @@ describe('PostForm component', () => {
     });
 
     test('matches the snapshot', () => {
-        const { asFragment } = render(<PostForm />);
+        const { asFragment } = render(
+                                    <MemoryRouter>
+                                        <PostForm />
+                                    </MemoryRouter>
+                                );
         expect(asFragment()).toMatchSnapshot();
     });
 });

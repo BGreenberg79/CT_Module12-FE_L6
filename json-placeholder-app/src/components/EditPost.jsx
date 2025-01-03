@@ -9,14 +9,17 @@ const EditPost = () => {
     const [post,setPost] = useState({
         title: '',
         body: '',
-        userId: 0
+        userId: 1
     })
 
     const fetchSinglePost = async () => {
         try{
-        const response = await axios.get(`https://jsonplaceholder.typicode.com/posts?id=${id}`)
-        return response.data[0]}
-        catch(err){
+            const response = await axios.get(`https://jsonplaceholder.typicode.com/posts?id=${id}`)
+            if (response && response.data){
+                return response.data
+            }
+            console.warn('No data found for post')
+        } catch(err){
             console.error(err)
             return null;
         }
@@ -24,6 +27,11 @@ const EditPost = () => {
 
     const updatePost = async () => {
         const data = await fetchSinglePost();
+        if (data.length() < 0){
+            return
+        }
+
+        data = data[0]
 
         if (data) {
             setPost({
@@ -53,7 +61,7 @@ const EditPost = () => {
                     headers: { 'Content-type': 'application/json; charset=UTF-8' },
                 }
             );
-            console.log('Post Updated', response.data),
+            // console.log('Post Updated', response.data),
             alert('Post Updated Successfully')        
         } catch (err) {
             console.error('Error updating post: ', err);
@@ -61,6 +69,26 @@ const EditPost = () => {
 
         }
     }
+
+    // const handleSubmit = async () => {
+    //     try {
+    //         const response = await axios.put(
+    //             `https://jsonplaceholder.typicode.com/posts/${id}`,
+    //             {
+    //                 title,
+    //                 body,
+    //                 userId,
+    //             },
+    //             { headers: { 'Content-type': 'application/json; charset=UTF-8' } }
+    //         );
+    //         console.log('Post Updated', response.data);
+    //         alert('Post Updated Successfully');
+    //     } catch (err) {
+    //         console.error('Error updating post:', err);
+    //         alert('Failed to update post');
+    //     }
+    // };
+    
 
     const handleSubmit = (event) => {
         event.preventDefault();

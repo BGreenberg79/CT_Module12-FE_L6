@@ -2,6 +2,7 @@ import { TextEncoder, TextDecoder } from 'text-encoding';
 global.TextEncoder = TextEncoder;
 global.TextDecoder = TextDecoder;
 
+
 import React from 'react';
 import '@testing-library/jest-dom';
 import PostList from '../components/PostList';
@@ -13,10 +14,20 @@ jest.mock('axios')
 
 describe('PostList Read component', ()=>{
     test('fetches posts from JSON Placeholder API upon loading', async ()=> {
-        const mockResponse = {data: [{userId:1, id:1, title:'test title', body:'test body'}]};
-        axios.get.mockResolvedValue(mockResponse);
+        
+        jest.mock('axios');
+        // const mockResponse = {data: [{userId:1, id:1, title:'test title', body:'test body'}]};
+        // axios.get.mockResolvedValue(mockResponse);
 
-        render(<PostList/>);
+        axios.get.mockResolvedValue({
+            data: [{ userId: 1, id: 1, title: 'test title', body: 'test body' }]
+        });
+
+        render(
+            <MemoryRouter>
+                <PostList/>
+            </MemoryRouter>
+        );
 
         await waitFor(()=> {
             expect(axios.get).toHaveBeenCalledWith('https://jsonplaceholder.typicode.com/posts')
@@ -28,8 +39,19 @@ describe('PostList Read component', ()=>{
 
 
     test('matches the snapshot', () => {
-        const { asFragment } = render(<PostList />);
+        const { asFragment } = render(
+        <MemoryRouter>
+            <PostList />
+        </MemoryRouter>);
         expect(asFragment()).toMatchSnapshot();
     
     });
 });
+
+// test('renders PostList', () => {
+//     render(
+//         <MemoryRouter>
+//             <PostList />
+//         </MemoryRouter>
+//     );
+// });
