@@ -39,14 +39,5 @@
     "jest-environment-jsdom": "^29.7.0",
     "jsdom": "^25.0.1",
     "vite": "^6.0.1"
-  },
-  "jest": {
-    "testEnvironment": "jest-environment-jsdom",
-    "setupFilesAfterEnv": [
-      "@testing-library/jest-dom"
-    ],
-    "transform": {
-      "^.+\\.jsx?$": "babel-jest"
-    }
   }
 }

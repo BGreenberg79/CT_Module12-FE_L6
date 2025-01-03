@@ -7,7 +7,7 @@ import '@testing-library/jest-dom';
 import EditPost from '../components/EditPost';
 import PostList from '../components/PostList'
 import axios from 'axios';
-import { render, waitFor, screen, fireEvent } from '@testing-library/react';
+import { render, waitFor, screen, fireEvent, act } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom'; 
 
 
@@ -21,14 +21,16 @@ describe('EditPost component', ()=>{
         axios.put.mockResolvedValue({ data: mockPost });
 
         render(
-        <MemoryRouter initialEntries={['list']}>
+            <MemoryRouter initialEntries={['/list']}>
             <Routes>
-                <Route path='list' element={<PostList/>}/>
-                <Route path='edit-post/:id' element={<EditPost/>}/>
+                <Route path="/list" element={<PostList />} />
             </Routes>
-        </MemoryRouter>)
+        </MemoryRouter>
+        )
 
-        fireEvent.click(screen.getByRole('button', {name: /Edit/i }));
+        await act(async () => {
+            fireEvent.click(screen.getByRole('button', {name: /Edit/i }));
+        })
         
         await waitFor(()=> {
             screen.getByLabelText(/Title:/i);
@@ -39,12 +41,16 @@ describe('EditPost component', ()=>{
         expect(screen.getByLabelText(/User Id:/i).value).toBe(String(mockPost.userId));
 
         // Tests updated inputs
-        fireEvent.change(screen.getByLabelText(/Title:/i), { target: { value: "Update Title" } });
-        fireEvent.change(screen.getByLabelText(/Body:/i), { target: { value: "Update Body" } });
-        fireEvent.change(screen.getByLabelText(/User Id:/i), { target: { value: "2" } });
+        await act(async () => {
+            fireEvent.change(screen.getByLabelText(/Title:/i), { target: { value: "Update Title" } });
+            fireEvent.change(screen.getByLabelText(/Body:/i), { target: { value: "Update Body" } });
+            fireEvent.change(screen.getByLabelText(/User Id:/i), { target: { value: "2" } });
+        })
 
         // Simulates Submit button
-        fireEvent.click(screen.getByRole('button', {name: /Edit Post/i }));
+        await act(async () => {
+            fireEvent.click(screen.getByRole('button', {name: /Edit Post/i }));
+        })
 
         await waitFor(()=>{
             expect(axios.put).toHaveBeenCalledWith(`https://jsonplaceholder.typicode.com/posts/${post.id}`,

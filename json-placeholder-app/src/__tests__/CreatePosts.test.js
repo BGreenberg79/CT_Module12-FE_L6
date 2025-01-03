@@ -20,12 +20,16 @@ describe('PostForm component', () => {
         render(<PostForm />);
 
         // Tests user inputs
-        fireEvent.change(screen.getByLabelText(/Title:/i), { target: { value: "Test Title" } });
-        fireEvent.change(screen.getByLabelText(/Body:/i), { target: { value: "Test Body" } });
-        fireEvent.change(screen.getByLabelText(/User Id:/i), { target: { value: "1" } });
+        await act(async () => {
+            fireEvent.change(screen.getByLabelText(/Title:/i), { target: { value: "Test Title" } });
+            fireEvent.change(screen.getByLabelText(/Body:/i), { target: { value: "Test Body" } });
+            fireEvent.change(screen.getByLabelText(/User Id:/i), { target: { value: "1" } });
+        })
 
         // Simulates Submit button
-        fireEvent.click(screen.getByRole('button', { name: /Add Post/i }));
+        await act(async () => {
+            fireEvent.click(screen.getByRole('button', { name: /Add Post/i }));
+        })
 
         await waitFor(() => {
             expect(axios.post).toHaveBeenCalledWith('https://jsonplaceholder.typicode.com/posts',
