@@ -19,6 +19,7 @@ const EditPost = () => {
                 return response.data
             }
             console.warn('No data found for post')
+            return null 
         } catch(err){
             console.error(err)
             return null;
@@ -27,7 +28,7 @@ const EditPost = () => {
 
     const updatePost = async () => {
         const data = await fetchSinglePost();
-        if (data.length() < 0){
+        if (!data || data.length === 0){
             return
         }
 

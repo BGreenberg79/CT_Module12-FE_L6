@@ -48,10 +48,3 @@ describe('PostList Read component', ()=>{
     });
 });
 
-// test('renders PostList', () => {
-//     render(
-//         <MemoryRouter>
-//             <PostList />
-//         </MemoryRouter>
-//     );
-// });
