@@ -47,7 +47,7 @@
 //         )
 //     );
 // });
-
+import React from 'react';
 import axios from 'axios';
 import { render, fireEvent, waitFor } from '@testing-library/react';
 import EditPost from '../components/EditPost';
