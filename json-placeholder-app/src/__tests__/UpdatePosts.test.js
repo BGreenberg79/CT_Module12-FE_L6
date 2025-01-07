@@ -49,13 +49,19 @@
 // });
 import React from 'react';
 import axios from 'axios';
-import { render, fireEvent, waitFor } from '@testing-library/react';
+import { render, fireEvent, waitFor, screen } from '@testing-library/react';
 import EditPost from '../components/EditPost';
 import { MemoryRouter } from 'react-router-dom';
+import { act } from 'react';
+import '@testing-library/jest-dom';
 
 jest.mock('axios');
 
+
 test('EditPost updates the form and sends a PUT request', async () => {
+
+    window.alert = jest.fn();
+
     // Mock the axios.get response
     axios.get.mockResolvedValueOnce({
         data: { id: 1, title: 'Sample Title', body: 'Sample Body', userId: 1 },
@@ -66,18 +72,26 @@ test('EditPost updates the form and sends a PUT request', async () => {
         data: { id: 1, title: 'Updated Title', body: 'Updated Body', userId: 1 },
     });
 
-    const { getByLabelText, getByText } = render(
-        <MemoryRouter>
-            <EditPost id={1} />
-        </MemoryRouter>
-    );
+    await act(async () => {
+        render(
+            <MemoryRouter>
+                <EditPost id={1} />
+            </MemoryRouter>
+        )
+    });
+
+    // Ensure the title and body inputs are pre-filled
+    expect(screen.getByLabelText(/Title:/i).value).toBe('Sample Title');
+    expect(screen.getByLabelText(/Body:/i).value).toBe('Sample Body');
 
     // Simulate user input
-    fireEvent.change(getByLabelText(/Title:/), { target: { value: 'Updated Title' } });
-    fireEvent.change(getByLabelText(/Body:/), { target: { value: 'Updated Body' } });
+    fireEvent.change(screen.getByLabelText(/Title:/i), { target: { value: 'Updated Title' } });
+    fireEvent.change(screen.getByLabelText(/Body:/i), { target: { value: 'Updated Body' } });
 
     // Simulate form submission
-    fireEvent.click(getByText('Edit Post'));
+    const button = await screen.findByRole('button', { name: /Update/i })
+    fireEvent.click(button);
+
 
     // Assert axios.put was called with the correct arguments
     await waitFor(() =>
@@ -87,4 +101,23 @@ test('EditPost updates the form and sends a PUT request', async () => {
             { headers: { 'Content-type': 'application/json; charset=UTF-8' } }
         )
     );
+});
+
+
+test('matches the snapshot', async () => {
+    axios.get.mockResolvedValueOnce({
+        data: { id: 1, title: 'Sample Title', body: 'Sample Body', userId: 1 },
+    });
+
+    const { asFragment } = render(
+        <MemoryRouter>
+            <EditPost id={1} />
+        </MemoryRouter>
+    );
+    await waitFor(() => {
+        expect(screen.getByLabelText(/Title:/i).value).toBe('Sample Title');
+        expect(screen.getByLabelText(/Body:/i).value).toBe('Sample Body');
+    });
+
+    expect(asFragment()).toMatchSnapshot();
 });

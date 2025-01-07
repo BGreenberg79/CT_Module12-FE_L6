@@ -12,7 +12,7 @@ const PostList = ()=> {
     const fetchPosts = async ()=> {try{
         const response = await axios.get('https://jsonplaceholder.typicode.com/posts')
         console.log(response)
-        setPosts(response?.data || []);
+        setPosts(response.data);
         // setPosts(response);
         return response.data}
         catch(err){ console.error(err)}}

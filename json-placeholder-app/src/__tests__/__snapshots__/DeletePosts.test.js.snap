@@ -1,0 +1,40 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`matches the snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="container"
+  >
+    <h2>
+      JSON Placeholder Post List
+    </h2>
+    <div
+      class="list-group"
+    >
+      <div
+        class="list-group-item list-group-item-info"
+      >
+        Post ID: 1
+        <br />
+        User ID: 1
+        <br />
+        Title: Sample Title
+        <br />
+        Body: Sample Body
+        <button
+          class="shadow-sm m-1 p-1 btn btn-warning"
+          type="button"
+        >
+          Edit
+        </button>
+        <button
+          class="shadow-sm m-1 p-1 btn btn-danger"
+          type="button"
+        >
+          Delete
+        </button>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;

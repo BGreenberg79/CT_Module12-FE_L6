@@ -32,7 +32,7 @@ const EditPost = () => {
             return
         }
 
-        data = data[0]
+        // data = data[0]
 
         if (data) {
             setPost({
@@ -138,7 +138,7 @@ const EditPost = () => {
 
 
                 <Button variant="success" type="submit">
-                    Edit Post
+                    Update
                 </Button>
             </Form>
         </Container>

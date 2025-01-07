@@ -3,7 +3,7 @@ global.TextEncoder = TextEncoder;
 global.TextDecoder = TextDecoder;
 
 
-import React from 'react';
+import React, { act } from 'react';
 import '@testing-library/jest-dom';
 import PostList from '../components/PostList';
 import axios from 'axios';
@@ -15,7 +15,6 @@ jest.mock('axios')
 describe('PostList Read component', ()=>{
     test('fetches posts from JSON Placeholder API upon loading', async ()=> {
         
-        jest.mock('axios');
         // const mockResponse = {data: [{userId:1, id:1, title:'test title', body:'test body'}]};
         // axios.get.mockResolvedValue(mockResponse);
 
@@ -23,19 +22,21 @@ describe('PostList Read component', ()=>{
             data: [{ userId: 1, id: 1, title: 'test title', body: 'test body' }]
         });
 
-        render(
-            <MemoryRouter>
-                <PostList/>
-            </MemoryRouter>
-        );
+        await act(async () => {
+            render(
+                <MemoryRouter>
+                    <PostList />
+                </MemoryRouter>
+            );
+        });
 
         await waitFor(()=> {
             expect(axios.get).toHaveBeenCalledWith('https://jsonplaceholder.typicode.com/posts')
-        });
 
             expect(screen.getByText(/test title/i)).toBeInTheDocument();
             expect(screen.getByText(/test body/i)).toBeInTheDocument();
         });
+    });
 
 
     test('matches the snapshot', () => {
